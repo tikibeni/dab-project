@@ -1,26 +1,26 @@
-# Designing and Building Scalable Web Applications / Course Project I Template
+# Designing and Building Scalable Web Applications / Course Project I
 
-Provides an endpoint for grading programming assignments. Has the functionality
-needed to create a grader image based on `grader-image` and to copy source code
-and test code to the image.
+## Install:
 
-When the grader API is run, the Docker daemon should be exposed to the grader
-API to allow running the created Docker images.
-
-This is done by mapping the docker daemon socket to the grader api in the
-`docker-compose.yml` file, e.g.
-
+```sh
+~/python-gym$ cd frontend
+~/python-gym/frontend$ npm install
 ```
-# ...
-  grader-api:
-    build: grader-api
-    image: grader-api
-    restart: "no"
-    volumes:
-      - ./grader-api/:/app
-      - ./app-cache/:/app-cache
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    ports:
-      - 7000:7000
-# ...
+
+## Run:
+
+```sh
+~/python-gym$ docker compose up
 ```
+
+You may need to use `docker-compose` instead of `docker compose` depending on your Docker compose version.
+
+You can run the container on the background using `-d` -switch.
+
+## Access:
+
+http://localhost:7800/
+
+## How to use?
+
+Check [documentation](./doc/).
