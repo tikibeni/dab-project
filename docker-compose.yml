@@ -9,17 +9,17 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - programming-api
-      - programming-ui
+      - pythongym-backend
+      - pythongym-frontend
     ports:
       - 7800:7800
 
-  programming-api:
-    build: programming-api
-    image: programming-api
+  pythongym-backend:
+    build: backend
+    image: pythongym-backend
     restart: "no"
     volumes:
-      - ./programming-api/:/app
+      - ./backend/:/app
       - ./app-cache/:/app-cache
     expose:
       - 7777
@@ -29,17 +29,17 @@ services:
     env_file:
       - project.env
 
-  programming-ui:
-    build: programming-ui
-    image: programming-ui
+  pythongym-frontend:
+    build: frontend
+    image: pythongym-frontend
     restart: "no"
     volumes:
-      - ./programming-ui/:/app
+      - ./frontend/:/app
       - astro_node_modules:/app/node_modules
     expose:
       - 3000
     depends_on:
-      - programming-api
+      - pythongym-backend
 
   grader-api:
     build: grader-api

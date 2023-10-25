@@ -4,7 +4,6 @@
 .vscode/*
 !.vscode/launch.json
 **/.vscode/
-programming-ui/.vscode
 
 # Build / deps
 node_modules/
