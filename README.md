@@ -5,6 +5,9 @@
 ```sh
 ~/python-gym$ cd frontend
 ~/python-gym/frontend$ npm install
+~/python-gym/frontend$ cd ..
+~/python-gym$ cd grader-image
+~/python-gym/grader-image$ bash build.sh
 ```
 
 ## Run:
