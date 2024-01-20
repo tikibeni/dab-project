@@ -7,7 +7,8 @@
 </script>
 
 <li>
-  {assignmentInfo.title}
+  {assignmentInfo.title} <br/>
+  {assignmentInfo.handout}
 </li>
 <input type="text" bind:value={solution} />
 <button on:click={submitSolution}>Submit solution</button>
