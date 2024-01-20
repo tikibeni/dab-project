@@ -9,7 +9,7 @@
   let assignmentsPromise = getAssignments()
 </script>
 
-<h1>Assignments</h1>
+<h1 style="font-size: 34px">Assignments</h1>
 
 {#await assignmentsPromise}
   <p>Loading assignments</p>
