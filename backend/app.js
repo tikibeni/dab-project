@@ -1,4 +1,5 @@
 import * as programmingAssignmentService from "./services/programmingAssignmentService.js";
+import * as submissionService from "./services/submissionService.js"
 import { serve } from "./deps.js";
 
 const handleRequest = async (request) => {
@@ -22,6 +23,31 @@ const handleRequest = async (request) => {
 
 const handleGetAssignments = async (request) => {
   return Response.json(await programmingAssignmentService.findAll());
+}
+
+const handlePostSubmissions = async (request) => {
+  let submission;
+  try {
+    submission = await request.json()
+  } catch {
+    return new Response("Bad request", { status: 400 })
+  }
+
+  /* submission sisältää:
+    programming_assignment_id
+    code
+    user_uuid
+    + status
+    + grader_feedback
+    + correct
+  */
+
+  if (submission.code != "") {
+    await submissionService.addSubmission(submission)
+    // Pisteytä ja palauta tulos
+    return new Response("OK", { status: 200 })
+  }
+  return new Response ("Bad request", { status: 400 })
 }
 
 /* 
@@ -48,6 +74,11 @@ const urlMapping = [
     method: "GET",
     pattern: new URLPattern({ pathname: "/assignments" }),
     fn: handleGetAssignments
+  },
+  {
+    method: "POST",
+    pattern: new URLPattern({ pathname: "/submissions" }),
+    fn: handlePostSubmissions
   }
 ]
 
