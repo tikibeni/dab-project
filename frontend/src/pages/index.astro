@@ -1,10 +1,8 @@
 ---
 import Layout from "../layout/Layout.astro";
-import GradingButton from "../components/GradingButton.svelte";
 import AssignmentList from "../components/AssignmentList.svelte"
 ---
 
 <Layout>
   <AssignmentList client:load />
-  <GradingButton client:only={"svelte"} />
 </Layout>
