@@ -40,8 +40,8 @@ const handlePostSubmissions = async (request) => {
     // Check if submission with same code and user id already exists
     // -> return already graded version for inspection.
     const exists = await handleGetSubmission(submission)
-    if (exists.body) {
-      return Response.json(exists)
+    if (exists) {
+      return new Response(JSON.stringify({ result: exists.grader_feedback }))
     }
   } catch {
     return new Response("Bad request", { status: 400 })
@@ -86,8 +86,7 @@ const handlePostSubmissions = async (request) => {
     // Give submission service the new info package
     await submissionService.addSubmission(submission)
 
-    // TODO: Return info about the grading to the user
-    return new Response("OK", { status: 200 })
+    return new Response(JSON.stringify({ result: submission.grader_feedback }))
   }
   return new Response("Bad request", { status: 400 })
 }

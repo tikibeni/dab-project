@@ -3,6 +3,7 @@
   
   export let assignmentInfo;
   let submission = ""
+  let result = ""
 
   const submit = async () => {
     const data = {
@@ -19,8 +20,10 @@
       body: JSON.stringify(data)
     })
 
-    console.log(response);
-    alert(JSON.stringify(response.statusText));
+    const jsonResponse = await response.json();
+    result = jsonResponse.result
+    // TODO: Split result string into pieces by matching:
+    // "Traceback", "File", "NameError" and other errors
   }
 </script>
 
@@ -34,5 +37,6 @@
     placeholder="Enter the solution here" 
     rows="4" 
   />
+  <p class="block mb-2 text-sm font-medium">{result}</p>
   <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded m-4" on:click={submit}>Submit solution</button>  
 </li>
