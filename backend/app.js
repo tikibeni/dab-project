@@ -25,61 +25,72 @@ const handleGetAssignments = async (request) => {
   return Response.json(await programmingAssignmentService.findAll());
 }
 
-const handleGetSubmissions = async (submission) => {
-  return Response.json(await submissionService.getSubmission(submission))
+const handleGetAssignment = async (request) => {
+  return await programmingAssignmentService.findOne(request)
+}
+
+const handleGetSubmission = async (submission) => {
+  return await submissionService.getSubmission(submission)
 }
 
 const handlePostSubmissions = async (request) => {
   let submission;
   try {
     submission = await request.json()
-    console.log(submission)
     // Check if submission with same code and user id already exists
     // -> return already graded version for inspection.
-    const exists = await handleGetSubmissions(submission)
-    console.log(exists)
-    if (exists) {
+    const exists = await handleGetSubmission(submission)
+    if (exists.body) {
       return Response.json(exists)
     }
   } catch {
     return new Response("Bad request", { status: 400 })
   }
 
-  /* submission sisältää:
-    programming_assignment_id
-    code
-    user_uuid
-    + status
-    + grader_feedback
-    + correct
-  */
-
   if (submission.code != "") {
+    let assignment;
+    try {
+      // For fetching the testcode of the assignment
+      assignment = await handleGetAssignment(submission.assignmentID)
+    } catch {
+      return new Response("Bad request", { status: 400 })
+    }
+
+    // Datablock for the grader
+    const gradingData = {
+      testCode: assignment.test_code,
+      code: submission.code
+    }
+
+    // Grading
+    const response = await fetch("http://grader-api:7000/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(gradingData)
+    })
+
+    const resultJson = await response.json()
+
+    const isCorrect = !resultJson.result.includes("Traceback")
+
+    // Add the new grading info to the submission
+    submission = {
+      ...submission,
+      status: 'processed',
+      grader_feedback: resultJson.result,
+      correct: isCorrect
+    }
+
+    // Give submission service the new info package
     await submissionService.addSubmission(submission)
-    // Pisteytä ja palauta tulos
+
+    // TODO: Return info about the grading to the user
     return new Response("OK", { status: 200 })
   }
-  return new Response ("Bad request", { status: 400 })
+  return new Response("Bad request", { status: 400 })
 }
-
-/* 
-  // Pisteytyskoodi
-  const programmingAssignments = await programmingAssignmentService.findAll();
-  const requestData = await request.json();
-  const testCode = programmingAssignments[0]["test_code"];
-  const data = {
-    testCode: testCode,
-    code: requestData.code,
-  };
-
-  const response = await fetch("http://grader-api:7000/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-*/
 
 const urlMapping = [
   {
