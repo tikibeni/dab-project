@@ -25,10 +25,22 @@ const handleGetAssignments = async (request) => {
   return Response.json(await programmingAssignmentService.findAll());
 }
 
+const handleGetSubmissions = async (submission) => {
+  return Response.json(await submissionService.getSubmission(submission))
+}
+
 const handlePostSubmissions = async (request) => {
   let submission;
   try {
     submission = await request.json()
+    console.log(submission)
+    // Check if submission with same code and user id already exists
+    // -> return already graded version for inspection.
+    const exists = await handleGetSubmissions(submission)
+    console.log(exists)
+    if (exists) {
+      return Response.json(exists)
+    }
   } catch {
     return new Response("Bad request", { status: 400 })
   }
@@ -73,6 +85,11 @@ const urlMapping = [
   {
     method: "GET",
     pattern: new URLPattern({ pathname: "/assignments" }),
+    fn: handleGetAssignments
+  },
+  {
+    method: "GET",
+    pattern: new URLPattern({ pathname: "/submissions" }),
     fn: handleGetAssignments
   },
   {
