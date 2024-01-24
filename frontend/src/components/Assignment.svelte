@@ -28,7 +28,6 @@
     // Increment step by one if submission is correct
     if (jsonResponse.correct && assignmentInfo.assignment_order == $userStep) {
       const updatedStep = parseInt($userStep, 10) + 1
-      // TODO: Fix localStorage's update problem. Doesn't seem to update value to the localStorage.
       userStep.set(updatedStep.toString())
     }
   }
