@@ -41,7 +41,10 @@ const handlePostSubmissions = async (request) => {
     // -> return already graded version for inspection.
     const exists = await handleGetSubmission(submission)
     if (exists) {
-      return new Response(JSON.stringify({ result: exists.grader_feedback }))
+      return new Response(JSON.stringify({
+        result: exists.grader_feedback,
+        correct: exists.correct
+      }))
     }
   } catch {
     return new Response("Bad request", { status: 400 })
