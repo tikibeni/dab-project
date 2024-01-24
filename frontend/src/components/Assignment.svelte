@@ -22,6 +22,8 @@
 
     const jsonResponse = await response.json();
     result = jsonResponse.result
+
+    // TODO: Increment store score by one when getting right first time
     // TODO: Split result string into pieces by matching:
     // "Traceback", "File", "NameError" and other errors
   }
@@ -35,7 +37,7 @@
     class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
     bind:value={submission} 
     placeholder="Enter the solution here" 
-    rows="4" 
+    rows="4"
   />
   <p class="block mb-2 text-sm font-medium">{result}</p>
   <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded m-4" on:click={submit}>Submit solution</button>  

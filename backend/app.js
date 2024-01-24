@@ -86,7 +86,7 @@ const handlePostSubmissions = async (request) => {
     // Give submission service the new info package
     await submissionService.addSubmission(submission)
 
-    return new Response(JSON.stringify({ result: submission.grader_feedback }))
+    return new Response(JSON.stringify({ result: submission.grader_feedback, correct: submission.isCorrect }))
   }
   return new Response("Bad request", { status: 400 })
 }

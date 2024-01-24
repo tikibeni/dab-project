@@ -1,4 +1,5 @@
 <script>
+  import { userStep } from "../stores/stores.js"
   import Assignment from './Assignment.svelte'
 
   const getAssignments = async () => {
@@ -19,7 +20,9 @@
   {:else}
     <ul>
     {#each assignments as assignment}
-      <Assignment assignmentInfo={assignment} />
+      {#if assignment.assignment_order <= $userStep}
+        <Assignment assignmentInfo={assignment} />
+      {/if}
     {/each}
     </ul>
   {/if}
