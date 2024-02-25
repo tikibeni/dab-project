@@ -2,7 +2,9 @@
   "name": "e2e-playwright-in-docker",
   "version": "1.0.0",
   "dependencies": {
-    "playwright": "^1.38.0",
-    "@playwright/test": "^1.38.0"
+    "playwright": "^1.38.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.41.2"
   }
 }
