@@ -28,6 +28,7 @@ services:
     depends_on:
       - database
       - flyway
+      - redis
       - grader-api
     env_file:
       - project.env
@@ -94,6 +95,14 @@ services:
     command: -connectRetries=60 -baselineOnMigrate=true migrate
     env_file:
       - project.env
+
+  redis:
+    image: redis:latest
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    expose:
+      - 6379
 
   pgadmin:
     image: dpage/pgadmin4:6.20

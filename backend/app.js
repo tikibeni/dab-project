@@ -1,5 +1,6 @@
 import * as programmingAssignmentService from "./services/programmingAssignmentService.js";
 import * as submissionService from "./services/submissionService.js"
+import { cacheMethodCalls } from "./util/cacheUtil.js";
 import { serve } from "./deps.js";
 
 const handleRequest = async (request) => {
@@ -21,16 +22,19 @@ const handleRequest = async (request) => {
   }
 };
 
+const cachedAssignmentService = cacheMethodCalls(programmingAssignmentService)
+const cachedSubmissionService = cacheMethodCalls(submissionService, ["addSubmission"])
+
 const handleGetAssignments = async (request) => {
-  return Response.json(await programmingAssignmentService.findAll());
+  return Response.json(await cachedAssignmentService.findAll());
 }
 
 const handleGetAssignment = async (request) => {
-  return await programmingAssignmentService.findOne(request)
+  return await cachedAssignmentService.findOne(request)
 }
 
 const handleGetSubmission = async (submission) => {
-  return await submissionService.getSubmission(submission)
+  return await cachedSubmissionService.getSubmission(submission)
 }
 
 const handlePostSubmissions = async (request) => {
@@ -87,7 +91,7 @@ const handlePostSubmissions = async (request) => {
     }
 
     // Give submission service the new info package
-    await submissionService.addSubmission(submission)
+    await cachedSubmissionService.addSubmission(submission)
 
     return new Response(JSON.stringify({ 
       result: submission.grader_feedback,
