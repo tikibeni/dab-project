@@ -22,13 +22,21 @@ services:
       - ./backend/:/app
       - ./app-cache/:/app-cache
     expose:
-      - 7777
+      - "7777-7778:7777"
     depends_on:
       - database
       - flyway
       - grader-api
     env_file:
       - project.env
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: "5s"
+        max_attempts: 5
+        window: "30s"
+
 
   pythongym-frontend:
     build: frontend

@@ -24,7 +24,7 @@ services:
       - ./backend/:/app
       - ./app-cache/:/app-cache
     expose:
-      - 7777
+      - "7777-7778:7777"
     depends_on:
       - database
       - flyway
