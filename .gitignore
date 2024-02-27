@@ -28,3 +28,5 @@ project.env
 
 # macOS-specific files
 .DS_Store
+
+production-database-data

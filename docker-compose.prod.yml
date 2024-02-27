@@ -15,9 +15,11 @@ services:
       - 7800:7800
 
   pythongym-backend:
-    build: backend
-    image: pythongym-backend
-    restart: "no"
+    build:
+      context: backend
+      dockerfile: Dockerfile.prod
+    image: pythongym-backend-prod
+    restart: "on-failure"
     volumes:
       - ./backend/:/app
       - ./app-cache/:/app-cache
@@ -29,34 +31,57 @@ services:
       - grader-api
     env_file:
       - project.env
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: "5s"
+        max_attempts: 5
+        window: "30s"
 
   pythongym-frontend:
-    build: frontend
-    image: pythongym-frontend
-    restart: "no"
+    build:
+      context: frontend
+      dockerfile: Dockerfile.prod
+    image: pythongym-frontend-prod
+    restart: "on-failure"
     volumes:
       - ./frontend/:/app
       - astro_node_modules:/app/node_modules
     expose:
-      - 3000
+      - 3000:80
     depends_on:
       - pythongym-backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: "5s"
+        max_attempts: 5
+        window: "30s"
 
   grader-api:
     build: grader-api
     image: grader-api
-    restart: "no"
+    restart: "on-failure"
     volumes:
       - ./grader-api/:/app
       - ./app-cache/:/app-cache
       - "/var/run/docker.sock:/var/run/docker.sock"
     expose:
       - 7000
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: "5s"
+        max_attempts: 5
+        window: "30s"
 
   database:
     container_name: database-server-dab-p1-8c8e4482-eac9-449f-830f-7f9a97bb7a53
     image: postgres:14.1
-    restart: "no"
+    restart: "unless-stopped"
+    volumes:
+      - ./production-database-data:/var/lib/postgresql/data
     env_file:
       - project.env
 
@@ -70,12 +95,11 @@ services:
     env_file:
       - project.env
 
-  e2e-playwright:
-    entrypoint: "/bin/true"
-    build: e2e-playwright
-    image: e2e-playwright
-    network_mode: host
+  pgadmin:
+    image: dpage/pgadmin4:6.20
+    env_file:
+      - project.env
     depends_on:
-      - nginx
-    volumes:
-      - ./e2e-playwright/tests:/e2e-playwright/tests
+      - database
+    profiles:
+      - pgadmin
