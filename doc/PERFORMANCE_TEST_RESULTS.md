@@ -1,24 +1,26 @@
 1. Loading the assignment page ([performance-test-visit-page.js](../k6/performance-test-visit-page.js))
 
-     data_received..................: 66 MB  6.6 MB/s
-     data_sent......................: 298 kB 30 kB/s
-     http_req_blocked...............: med=1.87µs  p(99)=4µs     
+     data_received..................: 69 MB  6.8 MB/s
+     data_sent......................: 308 kB 31 kB/s
+     http_req_blocked...............: med=1.91µs  p(99)=4.57µs  
      http_req_connecting............: med=0s      p(99)=0s      
-     http_req_duration..............: med=23.48ms p(99)=39.03ms 
-       { expected_response:true }...: med=23.48ms p(99)=39.03ms 
-     http_req_failed................: 0.00%  ✓ 0          ✗ 3730
-     http_req_receiving.............: med=53.51µs p(99)=109.34µs
-     http_req_sending...............: med=7.57µs  p(99)=15.3µs  
+     http_req_duration..............: med=22.6ms  p(99)=38.32ms 
+       { expected_response:true }...: med=22.6ms  p(99)=38.32ms 
+     http_req_failed................: 0.00%  ✓ 0          ✗ 3846
+     http_req_receiving.............: med=55.18µs p(99)=116.74µs
+     http_req_sending...............: med=7.98µs  p(99)=17.36µs 
      http_req_tls_handshaking.......: med=0s      p(99)=0s      
-     http_req_waiting...............: med=23.41ms p(99)=38.93ms 
-     http_reqs......................: 3730   372.284823/s
-     iteration_duration.............: med=23.53ms p(99)=39.1ms  
-     iterations.....................: 3730   372.284823/s
+     http_req_waiting...............: med=22.53ms p(99)=38.24ms 
+     http_reqs......................: 3846   383.852808/s
+     iteration_duration.............: med=22.65ms p(99)=38.38ms 
+     iterations.....................: 3846   383.852808/s
      vus............................: 10     min=10       max=10
      vus_max........................: 10     min=10       max=10
 
 
 2. Assignment submission ([performance-test-submit.js](../k6/performance-test-submit.js))
+
+2.1. Before caching and message queues
 
      data_received..................: 6.2 MB 621 kB/s
      data_sent......................: 3.7 MB 374 kB/s
@@ -34,5 +36,24 @@
      http_reqs......................: 19708  1970.163911/s
      iteration_duration.............: med=3.36ms  p(99)=5.15ms 
      iterations.....................: 19708  1970.163911/s
+     vus............................: 10     min=10        max=10 
+     vus_max........................: 10     min=10        max=10 
+
+2.2. After caching and message queues
+
+     data_received..................: 6.1 MB 609 kB/s
+     data_sent......................: 6.2 MB 622 kB/s
+     http_req_blocked...............: med=2.28µs  p(99)=6.43µs
+     http_req_connecting............: med=0s      p(99)=0s    
+     http_req_duration..............: med=2.64ms  p(99)=7.69ms
+       { expected_response:true }...: med=2.64ms  p(99)=7.69ms
+     http_req_failed................: 0.00%  ✓ 0           ✗ 32762
+     http_req_receiving.............: med=34.12µs p(99)=85µs  
+     http_req_sending...............: med=12.12µs p(99)=29.2µs
+     http_req_tls_handshaking.......: med=0s      p(99)=0s    
+     http_req_waiting...............: med=2.6ms   p(99)=7.62ms
+     http_reqs......................: 32762  3275.539735/s
+     iteration_duration.............: med=2.72ms  p(99)=7.78ms
+     iterations.....................: 32762  3275.539735/s
      vus............................: 10     min=10        max=10 
      vus_max........................: 10     min=10        max=10 
