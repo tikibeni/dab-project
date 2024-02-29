@@ -80,11 +80,15 @@ After this you can prune the containers.
 
 ## Testing
 
+### Playwright E2E
+
 The application comes with simple Playwright e2e-tests, which can be run as follows:
 
 ```sh
 ~python-gym$ docker compose run --entrypoint=npx e2e-playwright playwright test && docker compose rm -sf
 ```
+
+### K6 Performance
 
 There are also two k6-performance tests, which can be run by:
 

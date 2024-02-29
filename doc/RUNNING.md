@@ -1,4 +1,10 @@
-# Running the application
+# Designing and Building Scalable Web Applications / Course Project I
+
+## Documentation
+
+A basic get started guide can be found below and [here](./doc/RUNNING.md).
+
+The required k6 test results can be inspected [here](./doc/PERFORMANCE_TEST_RESULTS.md).
 
 ## Install:
 
@@ -71,3 +77,21 @@ You can close the created containers with
 ```
 
 After this you can prune the containers.
+
+## Testing
+
+### Playwright E2E
+
+The application comes with simple Playwright e2e-tests, which can be run as follows:
+
+```sh
+~python-gym$ docker compose run --entrypoint=npx e2e-playwright playwright test && docker compose rm -sf
+```
+
+### K6 Performance
+
+There are also two k6-performance tests, which can be run by:
+
+```sh
+~python-gym$ k6 run k6/performance-test-*.js
+```
