@@ -1,5 +1,6 @@
 1. Loading the assignment page ([performance-test-visit-page.js](../k6/performance-test-visit-page.js))
 
+```js
      data_received..................: 69 MB  6.8 MB/s
      data_sent......................: 308 kB 31 kB/s
      http_req_blocked...............: med=1.91µs  p(99)=4.57µs  
@@ -16,12 +17,13 @@
      iterations.....................: 3846   383.852808/s
      vus............................: 10     min=10       max=10
      vus_max........................: 10     min=10       max=10
-
+```
 
 2. Assignment submission ([performance-test-submit.js](../k6/performance-test-submit.js))
 
 2.1. Before caching and message queues
 
+```js
      data_received..................: 6.2 MB 621 kB/s
      data_sent......................: 3.7 MB 374 kB/s
      http_req_blocked...............: med=1.82µs  p(99)=5.19µs 
@@ -38,9 +40,11 @@
      iterations.....................: 19708  1970.163911/s
      vus............................: 10     min=10        max=10 
      vus_max........................: 10     min=10        max=10 
+```
 
 2.2. After caching and message queues
 
+```js
      data_received..................: 6.1 MB 609 kB/s
      data_sent......................: 6.2 MB 622 kB/s
      http_req_blocked...............: med=2.28µs  p(99)=6.43µs
@@ -57,3 +61,4 @@
      iterations.....................: 32762  3275.539735/s
      vus............................: 10     min=10        max=10 
      vus_max........................: 10     min=10        max=10 
+```
