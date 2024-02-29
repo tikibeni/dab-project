@@ -77,3 +77,17 @@ You can close the created containers with
 ```
 
 After this you can prune the containers.
+
+## Testing
+
+The application comes with simple Playwright e2e-tests, which can be run as follows:
+
+```sh
+~python-gym$ docker compose run --entrypoint=npx e2e-playwright playwright test && docker compose rm -sf
+```
+
+There are also two k6-performance tests, which can be run by:
+
+```sh
+~python-gym$ k6 run k6/performance-test-*.js
+```
