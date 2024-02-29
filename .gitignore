@@ -30,3 +30,4 @@ project.env
 .DS_Store
 
 production-database-data
+pythongym-backend

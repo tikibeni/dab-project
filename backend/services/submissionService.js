@@ -1,7 +1,11 @@
 import { sql } from "../database/database.js";
 
-const getSubmission = async (submission) => {
-    const found = await sql`SELECT * FROM programming_assignment_submissions WHERE code = ${submission.code} AND user_uuid = ${submission.user}`
+const getSubmissionByCode = async (submission) => {
+    const found = await sql`SELECT status, grader_feedback, correct 
+        FROM programming_assignment_submissions 
+        WHERE programming_assignment_id = ${submission.assignmentID} 
+        AND user_uuid = ${submission.user}
+        AND code LIKE ${submission.code}::TEXT`
     if (!found[0]) return null
     return found[0]
 }
@@ -13,4 +17,4 @@ const addSubmission = async (submission) => {
         ${submission.status}, ${submission.grader_feedback}, ${submission.correct})`
 }
 
-export { getSubmission, addSubmission };
+export { getSubmissionByCode, addSubmission };

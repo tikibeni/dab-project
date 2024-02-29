@@ -1,9 +1,42 @@
 <script>
-  import { userUuid, userStep } from "../stores/stores.js";
-  
-  export let assignmentInfo;
+  import { userUuid, userStep } from "../stores/stores.js"
+  export let assignmentInfo
+
   let submission = ""
   let result = ""
+  let pinging = false
+  let iterations = 0
+
+  const submissionPromise = async (data) => {
+    const queryUrl = `api/submissions/${data.assignmentID}/${data.user}/${data.code}`
+    const fetchedResult = await fetch(queryUrl, { method: "GET" })
+    return await fetchedResult.json()
+  }
+
+  // This is disgusting, but the pub-sub-Redis-model would not freaking work when
+  // frontend is run with node and backend is run with deno.
+  const pingLoop = async (data) => {
+    const fetchedData = await submissionPromise(data)
+    if (fetchedData != null && fetchedData.status == "processed"){
+      result = fetchedData.grader_feedback
+      if (fetchedData.correct && assignmentInfo.assignment_order == $userStep) {
+        const updatedStep = parseInt($userStep, 10) + 1
+        userStep.set(updatedStep.toString())
+      }
+      pinging = false
+      return
+    }
+    // Let's not wait forever.
+    if (iterations == 10) {
+      result = "Server didn't respond in time. Please try again."
+      pinging = false
+      return
+    }
+    iterations++
+    setTimeout(async () => {
+      return await pingLoop(data)
+    }, 1000)
+  }
 
   const submit = async () => {
     const data = {
@@ -20,15 +53,13 @@
       body: JSON.stringify(data)
     })
 
-    const jsonResponse = await response.json();
-    result = jsonResponse.result
-    // TODO: Split result string into pieces by matching:
-    // "Traceback", "File", "NameError" and other errors
-
-    // Increment step by one if submission is correct
-    if (jsonResponse.correct && assignmentInfo.assignment_order == $userStep) {
-      const updatedStep = parseInt($userStep, 10) + 1
-      userStep.set(updatedStep.toString())
+    if (response.status == 200) {
+      result = ""
+      iterations = 0
+      pinging = true
+      await pingLoop(data)
+    } else {
+      result = response.status.toString() + " " + response.statusText
     }
   }
 
@@ -52,7 +83,7 @@
   <button
     id="assignment-{assignmentInfo.id}-submit"
     class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded m-4"
-    disabled={assignmentDisabled()}
+    disabled={assignmentDisabled() || submission.length == 0 || pinging}
     on:click={submit}
   >
     Submit solution
